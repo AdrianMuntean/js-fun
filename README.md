@@ -12,3 +12,9 @@ Inspiration source: [Javascript30](https://javascript30.com) - Vanilla JS coding
 > `Those are your real skills?...`
 
 ##### ...
+
+
+List of projects:
+ - [Clock](https://adrianmuntean.github.io/js-fun/) - deployed using [Github pages](https://pages.github.com/)
+ - [City type ahead](https://city-type-ahead.adrianmuntean.now.sh) - deployed using [now.sh](now.sh)
+ - [Flex panels gallery](https://445142.playcode.io/) - deployed using [playcode.io](playcode.io)
