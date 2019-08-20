@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+  const canvas = document.querySelector('#draw');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  ctx.strokeStyle = '#BADA55';
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 0;
+
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+  let hue = 0;
+  let saturation = 0;
+  let saturationDir = 0;
+  let direction = true;
+  let combinationKey = {'n': false, 'ctrl': false};
+
+  function updateSaturation() {
+    if (saturationDir === 0) {
+      saturation++;
+      if (saturation >= 100) {
+        saturationDir = 1;
+      }
+    } else {
+      saturation--;
+      if (saturation <= 15) {
+        saturationDir = 0;
+      }
+    }
+  }
+
+  function draw(e) {
+    if(!isDrawing) return;
+    ctx.strokeStyle = `hsl(${hue}, ${saturation}%, 50%)`;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+
+    lastX = e.offsetX;
+    lastY = e.offsetY;
+    hue++;
+
+    if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+      direction = !direction;
+    }
+
+    if (direction) {
+      ctx.lineWidth++;
+    } else {
+      ctx.lineWidth--;
+    }
+
+    if (hue % 2 === 0) {
+      updateSaturation();
+    }
+  }
+
+  function resetCanvas() {
+    if (!isDrawing) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    } else {
+      alert("Can't start a new canvas while drawing");
+    }
+  }
+
+  function keydownHandler(e) {
+    if (e.keyCode === 17) {
+      combinationKey['ctrl'] = true;
+    } 
+
+    if (e.keyCode === 78) {
+      combinationKey['n'] = true;
+    }
+    
+    if (combinationKey['ctrl'] && combinationKey['n']) {
+      resetCanvas();
+    }
+  }
+
+  function keyupHandler(e) {
+    if (e.keyCode === 17) {
+      combinationKey['ctrl'] = false;
+    }
+
+    if (e.keyCode === 78) {
+      combinationKey['n'] = false;
+    }
+  }
+
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mousedown', (e) => {isDrawing = true; lastX = e.offsetX; lastY = e.offsetY;});
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
+  document.addEventListener('keydown', keydownHandler);
+  document.addEventListener('keyup', keyupHandler);
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+</style>
+
+</body>
+</html>
